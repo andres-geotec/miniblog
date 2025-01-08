@@ -3,5 +3,5 @@ import '@centrogeomx/sisdai-css'
 </script>
 
 <template>
-  <NuxtPage />
+  <NuxtLayout />
 </template>
