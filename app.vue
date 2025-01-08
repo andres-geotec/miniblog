@@ -1,6 +1,7 @@
+<script>
+import '@centrogeomx/sisdai-css'
+</script>
+
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NuxtPage />
 </template>
