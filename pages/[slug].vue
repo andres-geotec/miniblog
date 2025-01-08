@@ -1,6 +1,13 @@
 <script setup>
 import { marked } from "marked";
 
+useHead({
+  title: 'miniblog',
+  meta: [
+    { name: 'description', content: 'My amazing site.' }
+  ],
+})
+
 const x = marked('# Title\n\n## Second title\n\nLorem ipsum dolor sit amet')
 </script>
 
