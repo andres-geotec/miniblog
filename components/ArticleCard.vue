@@ -21,9 +21,12 @@ defineProps([
     </div>
     
     <div class="tarjeta-pie">
-      <button type="button" class="boton-primario boton-chico">
+      <NuxtLink
+        class="boton-primario boton-chico"
+        :to="slug"
+      >
         Ir al post
-      </button>
+      </NuxtLink>
     </div>
   </div>
   <!-- <div>
