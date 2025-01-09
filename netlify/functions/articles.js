@@ -16,15 +16,27 @@ const headers = {
   "content-type": "application/json",
 }
 
-exports.handler = async function (evt) {
-  const articles = await db('articles').select().all()
+exports.handler = async function () {
+  try {
+    const articles = (await db('articles').select().all())
+      .map((e) => ({
+        _id: e.id,
+        ...e.fields,
+      }))
+      .filter((e) => e.publish)
 
-  return {
-    statusCode: 200,
-    headers,
-    body: JSON.stringify({
-      // hello: 'world',
-      articles,
-    })
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        articles,
+      }),
+    }
+  } catch (e) {
+    console.error(e)
+    return {
+      statusCode: 400,
+      headers,
+    }
   }
 }
