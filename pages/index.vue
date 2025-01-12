@@ -1,18 +1,17 @@
 <script setup>
 const articles = ref([])
 
-const url = 'http://localhost:9999/.netlify/functions/articles'
-useFetch(url)
-  .then(({ data }) => {
-    articles.value = data.value.articles.map(a => ({
-      ...a,
-      author: a['author-name'][0],
-      date: new Date(a.updated),
-      cover: a.cover[0]?.thumbnails.large.url,
-    }))
-  })
-  .catch()
-  .finally()
+const { data } = await useAsyncData(() => {
+  const url = 'http://localhost:9999/.netlify/functions/articles'
+  return $fetch(url)
+})
+
+articles.value = data.value.articles.map(a => ({
+  ...a,
+  author: a['author-name'][0],
+  date: new Date(a.updated),
+  cover: a.cover[0]?.thumbnails.large.url,
+}))
 </script>
 
 <template>

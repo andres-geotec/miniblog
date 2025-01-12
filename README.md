@@ -73,3 +73,12 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Back
+
+```bash
+# api
+netlify functions:serve
+```
+
+Start the development server on `http://localhost:9999/.netlify/functions/base`:

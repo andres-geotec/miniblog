@@ -5,7 +5,7 @@ const Airtable = require('airtable')
 
 const db = new Airtable({
   apiKey: process.env.AIRTABLE_TOKEN,
-}).base(process.env.AIRTABLE_BASE_ID,)
+}).base(process.env.AIRTABLE_BASE_ID)
 
 const headers = {
   /* Required for CORS support to work */
@@ -16,21 +16,37 @@ const headers = {
   "content-type": "application/json",
 }
 
-exports.handler = async function () {
+const toJSON = (str) => {
   try {
-    const articles = (await db('articles').select().all())
-      .map((e) => ({
-        _id: e.id,
-        ...e.fields,
-      }))
-      .filter((e) => e.publish)
+    return JSON.parse(str)
+  } catch (e) {
+    return null
+  }
+}
+
+exports.handler = async function (evt) {
+  try {
+    const { httpMethod } = evt
+    const { article } = evt.queryStringParameters
+
+    if (httpMethod !== 'POST') throw new Error('Invalid method')
+
+    const body = toJSON(evt.body)
+
+    await db('comments').create([
+      {
+        fields: {
+          author: body?.name,
+          'author-email': body?.email,
+          content: body?.content,
+          post: [article],
+        },
+      },
+    ])
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({
-        articles,
-      }),
     }
   } catch (e) {
     console.error(e)

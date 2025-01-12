@@ -1,5 +1,5 @@
 <script setup>
-import { marked } from "marked";
+import { marked } from "marked"
 
 useHead({
   title: 'miniblog',
@@ -7,6 +7,8 @@ useHead({
     { name: 'description', content: 'My amazing site.' }
   ],
 })
+
+const comments = ref([])
 
 const { data } = await useAsyncData(() => {
   const { slug } = useRoute().params
@@ -16,6 +18,7 @@ const { data } = await useAsyncData(() => {
 })
 
 const article = {
+  id: data.value?.article?._id,
   title: data.value?.article.title,
   author: data.value?.article['author-name'][0],
   updated: new Date(data.value?.article?.updated).toLocaleDateString(),
@@ -23,10 +26,34 @@ const article = {
   cover: data.value?.article?.cover[0].thumbnails.full.url,
   content: marked(data.value?.article?.content,)
 }
+
+comments.value = data.value?.comments
+
+async function createComment(comment) {
+  await fetch(
+    `${'http://localhost:9999'}/.netlify/functions/comment?article=${article.id}`,
+    { method: 'post', body: JSON.stringify(comment) }
+  )
+}
 </script>
 
 <template>
   <div class="contenedor">
+    <div class="ancho-lectura fondo-color-neutro p-4">
+      <div class="m-x-4">
+        <h2 class="m-b-1">Comentarios</h2>
+        <p class="m-t-1">Hay {{ comments.length || 0 }} comentarios</p>
+        <CommentItem
+          class="m-t-2"
+          v-for="comment in comments"
+          :key="comment._id"
+          v-bind="comment"
+        />
+
+        <InputComment @submit="createComment" />
+      </div>
+    </div>
+
     <div class="ancho-fijo">
       <h1>{{ article.title }}</h1>
       <p class="parrafo-texto-alto m-y-0">Por: {{ article.author }}</p>
