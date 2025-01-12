@@ -2,7 +2,7 @@
 const articles = ref([])
 
 const { data } = await useAsyncData(() => {
-  const url = 'http://localhost:9999/.netlify/functions/articles'
+  const url = `${api}/.netlify/functions/articles`
   return $fetch(url)
 })
 

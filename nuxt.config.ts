@@ -15,4 +15,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   pages: true,
+  runtimeConfig: {
+    public: {
+      NETLIFY_API: process.env.NETLIFY_API
+    },
+  },
 })
